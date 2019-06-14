@@ -7,6 +7,7 @@ public class Board {
 	private int columns;
 	private Piece [][] pieces;
 	
+	// Construtor
 	public Board(int rows, int columns) {
 		if (rows < 1 || columns < 1) {
 			throw new BoardException ("Error creating board: there must be at least 1 row and 1 column");
@@ -16,6 +17,7 @@ public class Board {
 		pieces = new Piece [rows][columns];
 	}
 
+	// Encapsulamento
 	public int getRows() {
 		return rows;
 	}
@@ -24,6 +26,7 @@ public class Board {
 		return columns;
 	}
 
+	// Fornece a row e column e retorna a peça
 	public Piece piece (int row, int column) {
 		if (!positionExists(row, column)) {
 			throw new BoardException("Position not on the board");
@@ -31,7 +34,7 @@ public class Board {
 		return pieces[row][column];
 	}
 	
-	// SOBRECARGA
+	// Sobrecarga do método anterior, fornecendo a posição Position
 	public Piece piece (Position position) {
 		if (!positionExists(position.getRow(), position.getColumn())) {
 			throw new BoardException("Position not on the board");
@@ -39,14 +42,16 @@ public class Board {
 		return pieces[position.getRow()][position.getColumn()];
 	}
 	
+	// Aloca a peça na posição
 	public void placePiece (Piece piece, Position position) {
 		if (thereIsAPiece(position)) {
 			throw new BoardException("There is alrea dy a piece on position" + position);
 		}
 		pieces[position.getRow()][position.getColumn()] = piece;
-		piece.position = position;
+		piece.position = position; // Atributo position do objeto piece é definido como o argumento position
 	}
 	
+	// Remove a peça da posição informada e retorna a peça removida
 	public Piece removePiece(Position position) {
 		if (!positionExists(position)) {
 			throw new BoardException ("Position not on the board");
@@ -60,14 +65,18 @@ public class Board {
 		return aux;
 	}
 	
+	// Verifica se a row e column fornecidos existem dentro do tabuleiro, retorna true ou false
 	public boolean positionExists (int row, int column) {
 		return row >= 0 && row < rows && column >=0 && column < columns;
 	}
 	
+	// Sobrecarga do método anterior, fornecendo a posição Position
 	public boolean positionExists (Position position) {
 		return positionExists(position.getRow(), position.getColumn());
 	}
 	
+	// Verifica se a posição existe no tabuleiro. 
+	// Se existir, verifica se há peça na posição. Retorna true ou false
 	public boolean thereIsAPiece (Position position) {
 		if (!positionExists(position)) {
 			throw new BoardException("Position not on the board");
