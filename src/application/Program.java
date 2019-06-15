@@ -8,8 +8,6 @@ import chess.ChessMatch;
 import chess.ChessPiece;
 import chess.ChessPosition;
 
-// Para rodar o programa no console "java application/Program"
-
 public class Program {
 
 	public static void main(String[] args) {
@@ -36,7 +34,7 @@ public class Program {
 				sc.nextLine(); // Aguardar a quebra de linha
 			} catch (InputMismatchException e) {
 				System.out.println(e.getMessage());
-				sc.nextLine(); // Aguardar a quebra de linha
+				sc.nextLine(); 
 			}
 		}
 	}

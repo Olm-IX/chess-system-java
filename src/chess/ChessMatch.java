@@ -7,19 +7,19 @@ import chess.pieces.King;
 import chess.pieces.Rook;
 
 public class ChessMatch {
-
+// ChessMatch conterá todas as regras do jogo de xadrez
+	
 	private Board board;
 	
-	//QUEM DEVE SABER A DIMENSÃO DO TABULEIRO DE XADREZ É A CLASSE
-	//CHESSMATCH, NÃO O TABULEIRO!
-	//O CHESSMATCH CONTERÁ TODAS AS REGRAS DO JOGO
+	// Quem define a dimensão de um tabuleiro de xadrez é a classe ChessMatch
+	// E não o Board
 	public ChessMatch() {
 		board = new Board (8, 8);
 		initialSetup();
 	}
 	
-	//A CAMADA DE CHESS NÃO DEVE ACESSAR A CLASSE DO TIPO PIECE,
-	//QUE PERTENCE A OUTRA CAMADA! E SIM O CHESSPIECE, SUBCLASSE, DA CAMADA CHESS
+	//A camada Chess não deve acessar a classe Piece
+	//que pertence a outra camada. E sim o ChessPiece, subclasse da camada Chess
 	public ChessPiece[][] getPieces() {
 		ChessPiece[][] mat = new ChessPiece[board.getRows()][board.getColumns()];
 		for (int i=0; i<board.getRows(); i++) {
@@ -45,9 +45,15 @@ public class ChessMatch {
 		return (ChessPiece) capturedPiece;
 	}
 	
+	// Verifica se é possível mover a peça da posição
 	private void validateSourcePosition(Position position) {
+		// Verifica se há peça na posição
 		if (!board.thereIsAPiece(position)) {
 			throw new ChessException("There is no piece on source position");
+		}
+		// Verifica se há movimentos possíveis (peça não está "presa)
+		if (board.piece(position).isThereAnyPossibleMove()) {
+			throw new ChessException("There is no possible moves for the chosem piece");
 		}
 	}
 	
@@ -55,7 +61,7 @@ public class ChessMatch {
 		board.placePiece(piece, new ChessPosition(column, row).toPosition());
 	}
 	
-	//COLOCANDO AS PEÇAS NO TABULEIRO
+	// Coloca as peças no tabuleiro
 	private void initialSetup() {
 		placeNewPiece('c', 1, new Rook(board, Color.WHITE));
         placeNewPiece('c', 2, new Rook(board, Color.WHITE));

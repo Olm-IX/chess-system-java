@@ -26,6 +26,8 @@ public class Board {
 		return columns;
 	}
 
+	//Métodos
+	
 	// Fornece a row e column e retorna a peça
 	public Piece piece (int row, int column) {
 		if (!positionExists(row, column)) {
@@ -45,7 +47,7 @@ public class Board {
 	// Aloca a peça na posição
 	public void placePiece (Piece piece, Position position) {
 		if (thereIsAPiece(position)) {
-			throw new BoardException("There is alrea dy a piece on position" + position);
+			throw new BoardException("There is already a piece on position" + position);
 		}
 		pieces[position.getRow()][position.getColumn()] = piece;
 		piece.position = position; // Atributo position do objeto piece é definido como o argumento position
