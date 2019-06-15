@@ -32,7 +32,14 @@ public class ChessMatch {
 		return mat;
 	}
 	
-	// Converte a posição fornecida para uma posição de matriz, valida se a posição e o movimento são possíveis, e executa o movimento
+	// Cria uma matriz booleana com o valor "true" para os movimentos possíveis da peça que está na posição dada
+	public boolean [][] possibleMoves(ChessPosition sourcePosition){
+		Position position = sourcePosition.toPosition();
+		validateSourcePosition(position);
+		return board.piece(position).possibleMoves();
+	}
+	
+	// Converte posição fornecida para posição de matriz, valida se posição e movimento são possíveis, e executa o movimento
 	public ChessPiece performChessMove(ChessPosition sourcePosition, ChessPosition targetPosition) {
 		Position source = sourcePosition.toPosition();
 		Position target = targetPosition.toPosition();

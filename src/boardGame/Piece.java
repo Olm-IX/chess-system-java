@@ -25,8 +25,8 @@ public abstract class Piece {
 	// Métodos e classes abstratas possuem nome em itálico no UML
 	public abstract boolean[][] possibleMoves(); 
 	
-	
 	// Hook method: método concreto que chama uma implementação de um método abstrato
+	// Verifica se é possível o movimento para a posição destino (true ou false)
 	public boolean possibleMove(Position position) {
 		return possibleMoves()[position.getRow()][position.getColumn()];
 	}
