@@ -11,15 +11,15 @@ public class ChessMatch {
 	
 	private Board board;
 	
-	// Quem define a dimensão de um tabuleiro de xadrez é a classe ChessMatch
-	// E não o Board
+	// Construtor
 	public ChessMatch() {
-		board = new Board (8, 8);
+		board = new Board (8, 8); // Quem define a dimensão de um tabuleiro de xadrez é a classe ChessMatch, e não o Board
 		initialSetup();
 	}
 	
-	//A camada Chess não deve acessar a classe Piece
-	//que pertence a outra camada. E sim o ChessPiece, subclasse da camada Chess
+	//Métodos
+	
+	// Downcasting da matriz de Piece para uma matriz de ChessPiece
 	public ChessPiece[][] getPieces() {
 		ChessPiece[][] mat = new ChessPiece[board.getRows()][board.getColumns()];
 		for (int i=0; i<board.getRows(); i++) {
@@ -27,17 +27,22 @@ public class ChessMatch {
 				mat[i][j] = (ChessPiece) board.piece(i,j); // DOWNCASTING
 			}
 		}
+		//A camada Chess não deve acessar a classe Piece
+		//que pertence a outra camada. E sim o ChessPiece, subclasse da camada Chess
 		return mat;
 	}
 	
+	// Converte a posição fornecida para uma posição de matriz, valida se a posição e o movimento são possíveis, e executa o movimento
 	public ChessPiece performChessMove(ChessPosition sourcePosition, ChessPosition targetPosition) {
 		Position source = sourcePosition.toPosition();
 		Position target = targetPosition.toPosition();
-		validateSourcePosition(source);
+		validateSourcePosition(source); // Verifica se há peça na posição inicial e se não está "presa"
+		validateTargetPosition(source, target); // Verifica se a peça escolhida pode ser movida para a posição final
 		Piece capturedPiece = makeMove(source, target);
 		return (ChessPiece)capturedPiece;
 	}
 	
+	// Executa o movimento no tabuleiro
 	private Piece makeMove(Position source, Position target) {
 		Piece p = board.removePiece(source);
 		Piece capturedPiece = board.removePiece(target);
@@ -45,18 +50,28 @@ public class ChessMatch {
 		return (ChessPiece) capturedPiece;
 	}
 	
-	// Verifica se é possível mover a peça da posição
+	// Verifica se é possível mover a peça da posição inicial
 	private void validateSourcePosition(Position position) {
 		// Verifica se há peça na posição
 		if (!board.thereIsAPiece(position)) {
 			throw new ChessException("There is no piece on source position");
 		}
-		// Verifica se há movimentos possíveis (peça não está "presa)
-		if (board.piece(position).isThereAnyPossibleMove()) {
-			throw new ChessException("There is no possible moves for the chosem piece");
+		// Verifica se há movimentos possíveis (peça não está "presa")
+		if (!board.piece(position).isThereAnyPossibleMove()) {
+			throw new ChessException("There is no possible moves for the chosen piece");
 		}
 	}
 	
+	// Verifica se é possível mover a peça escolhida para a posição final
+	private void validateTargetPosition(Position source, Position target) {
+		// Se para a peça de origem a posição de destino não é um movimento possível
+		// então, lançar excessão de movimento não possível
+		if (!board.piece(source).possibleMove(target)) {
+			throw new ChessException("The chosen piece can't move to target position");
+		}
+	}
+	
+	// Coloca nova peça no tabuleiro, usado no initial Setup
 	private void placeNewPiece (char column, int row, ChessPiece piece) {
 		board.placePiece(piece, new ChessPosition(column, row).toPosition());
 	}
