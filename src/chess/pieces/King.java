@@ -22,8 +22,7 @@ public final class King extends ChessPiece {
 		return p == null || p.getColor() != getColor();
 	}
 
-	// Cria matriz booleana com valor "true" nas posições em que é possível o
-	// movimento da peça
+	// Cria matriz booleana com valor "true" nas posições em que é possível o movimento da peça
 	@Override
 	public boolean[][] possibleMoves() {
 		boolean[][] mat = new boolean[getBoard().getRows()][getBoard().getColumns()];

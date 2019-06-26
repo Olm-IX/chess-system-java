@@ -10,11 +10,24 @@ public class ChessMatch {
 // ChessMatch conterá todas as regras do jogo de xadrez
 	
 	private Board board;
+	private int turn;
+	private Color currentPlayer;
 	
 	// Construtor
 	public ChessMatch() {
 		board = new Board (8, 8); // Quem define a dimensão de um tabuleiro de xadrez é a classe ChessMatch, e não o Board
+		turn = 1;
+		currentPlayer = Color.WHITE;
 		initialSetup();
+	}
+	
+	// Getters
+	public int getTurn() {
+		return turn;
+	}
+	
+	public Color getCurrentPlayer() {
+		return currentPlayer;
 	}
 	
 	//Métodos
@@ -44,8 +57,9 @@ public class ChessMatch {
 		Position source = sourcePosition.toPosition();
 		Position target = targetPosition.toPosition();
 		validateSourcePosition(source); // Verifica se há peça na posição inicial e se não está "presa"
-		validateTargetPosition(source, target); // Verifica se a peça escolhida pode ser movida para a posição final
+		validateTargetPosition(source, target); // Verifica se a peça escolhida pode ser movida para a posição destino
 		Piece capturedPiece = makeMove(source, target);
+		nextTurn(); // Troca o turno
 		return (ChessPiece)capturedPiece;
 	}
 	
@@ -63,6 +77,10 @@ public class ChessMatch {
 		if (!board.thereIsAPiece(position)) {
 			throw new ChessException("There is no piece on source position");
 		}
+		// Verifica se a peça na posição escolhida pertence ao jogador do turno
+		if (currentPlayer != ((ChessPiece)board.piece(position)).getColor()) {
+			throw new ChessException("The chosen piece is not yours");
+		}
 		// Verifica se há movimentos possíveis (peça não está "presa")
 		if (!board.piece(position).isThereAnyPossibleMove()) {
 			throw new ChessException("There is no possible moves for the chosen piece");
@@ -76,6 +94,13 @@ public class ChessMatch {
 		if (!board.piece(source).possibleMove(target)) {
 			throw new ChessException("The chosen piece can't move to target position");
 		}
+	}
+	
+	// Próximo turno da partida, muda a cor do jogador atual
+	private void nextTurn() {
+		turn ++;
+		currentPlayer = (currentPlayer == Color.WHITE) ? Color.BLACK : Color.WHITE;
+		// Expressão condicional ternária: ( condição ) ? valor_se_verdadeiro : valor_se_falso
 	}
 	
 	// Coloca nova peça no tabuleiro, usado no initial Setup
