@@ -1,5 +1,8 @@
 package chess;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import boardGame.Board;
 import boardGame.Piece;
 import boardGame.Position;
@@ -12,6 +15,8 @@ public class ChessMatch {
 	private Board board;
 	private int turn;
 	private Color currentPlayer;
+	private List<Piece> piecesOnTheBoard = new ArrayList<>();
+	private List<Piece> capturedPieces = new ArrayList<>();
 	
 	// Construtor
 	public ChessMatch() {
@@ -53,6 +58,7 @@ public class ChessMatch {
 	}
 	
 	// Converte posição fornecida para posição de matriz, valida se posição e movimento são possíveis, e executa o movimento
+	// Retorna a peça que estava na posição destino (ou nulo)
 	public ChessPiece performChessMove(ChessPosition sourcePosition, ChessPosition targetPosition) {
 		Position source = sourcePosition.toPosition();
 		Position target = targetPosition.toPosition();
@@ -68,6 +74,12 @@ public class ChessMatch {
 		Piece p = board.removePiece(source);
 		Piece capturedPiece = board.removePiece(target);
 		board.placePiece(p, target);
+		
+		//Se houver peça na posição destino, a mesma é retirada da lista piecesOnTheBoard, e acrescentada na lista capturedPieces
+		if (capturedPiece != null) { 
+			piecesOnTheBoard.remove(capturedPiece);
+			capturedPieces.add(capturedPiece);
+		}
 		return (ChessPiece) capturedPiece;
 	}
 	
@@ -106,6 +118,8 @@ public class ChessMatch {
 	// Coloca nova peça no tabuleiro, usado no initial Setup
 	private void placeNewPiece (char column, int row, ChessPiece piece) {
 		board.placePiece(piece, new ChessPosition(column, row).toPosition());
+		// Cada peça colocada é também inserida na lista de peças no tabuleiro, piecesOnTheBoard
+		piecesOnTheBoard.add(piece);
 	}
 	
 	// Coloca as peças no tabuleiro
