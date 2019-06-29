@@ -17,6 +17,7 @@ public class ChessMatch {
 	private int turn;
 	private Color currentPlayer;
 	private boolean check;
+	private boolean checkMate;
 	private List<Piece> piecesOnTheBoard = new ArrayList<>();
 	private List<Piece> capturedPieces = new ArrayList<>();
 
@@ -39,6 +40,10 @@ public class ChessMatch {
 	
 	public boolean getCheck() {
 		return check;
+	}
+	
+	public boolean getCheckMate() {
+		return checkMate;
 	}
 
 	// Métodos
@@ -78,7 +83,12 @@ public class ChessMatch {
 			throw new ChessException("You can't put yourself in check");
 		}
 		check = (testCheck(opponent(currentPlayer))) ? true : false; // Verifica se o jogador colocou o oponente em cheque
+		if (testCheckMate(opponent(currentPlayer))) { // Verifica se o jogador colocou o oponente em cheque mate
+			checkMate = true;
+		}
+		else {
 		nextTurn(); // Troca o turno
+		}
 		return (ChessPiece) capturedPiece;
 	}
 
@@ -181,20 +191,40 @@ public class ChessMatch {
 		return false;
 	}
 	
+	// O rei da cor está em cheque mate?
+	private boolean testCheckMate(Color color) {
+		if (!testCheck(color)) { // Testa se está em cheque. Se não, não está em cheque mate.
+			return false;
+		}
+		// Filtra em lista todas as peças no tabuleiro da cor
+		List<Piece> list = piecesOnTheBoard.stream().filter(x -> ((ChessPiece)x).getColor() == color).collect(Collectors.toList());
+		for (Piece p : list) { // Verifica todos os movimentos possíveis das peças da lista, e se há algum capaz de tirar o rei do cheque mate
+			boolean[][] mat = p.possibleMoves();
+			for (int i=0; i<board.getRows(); i++) {
+				for (int j=0; j<board.getColumns(); j++) {
+					if (mat[i][j]) { // Se a posição da matriz é um movimento possível da peça (true)
+						Position source = ((ChessPiece)p).getChessPosition().toPosition();
+						Position target = new Position(i, j);
+						Piece capturedPiece = makeMove(source, target); // Faz o movimento
+						boolean testCheck = testCheck(color); 
+						undoMove(source, target, capturedPiece); // Desfaz o movimento
+						if (!testCheck) {
+							return false; // Movimento retirou o rei do cheque, então não há cheque mate
+						}
+					}
+				}
+			}
+		}
+		return true; // Nenhum movimento possível de peças da cor retirou o rei do cheque
+	}	
+
 	// Coloca as peças no tabuleiro
 	private void initialSetup() {
-		placeNewPiece('c', 1, new Rook(board, Color.WHITE));
-		placeNewPiece('c', 2, new Rook(board, Color.WHITE));
-		placeNewPiece('d', 2, new Rook(board, Color.WHITE)); 
-		placeNewPiece('e', 2, new Rook(board, Color.WHITE));
-		placeNewPiece('e', 1, new Rook(board, Color.WHITE));
-		placeNewPiece('d', 1, new King(board, Color.WHITE));
-
-		placeNewPiece('c', 7, new Rook(board, Color.BLACK));
-		placeNewPiece('c', 8, new Rook(board, Color.BLACK));
-		placeNewPiece('d', 7, new Rook(board, Color.BLACK));
-		placeNewPiece('e', 7, new Rook(board, Color.BLACK));
-		placeNewPiece('e', 8, new Rook(board, Color.BLACK));
-		placeNewPiece('d', 8, new King(board, Color.BLACK));
+        placeNewPiece('h', 7, new Rook(board, Color.WHITE));
+        placeNewPiece('d', 1, new Rook(board, Color.WHITE));
+        placeNewPiece('e', 1, new King(board, Color.WHITE));
+        
+        placeNewPiece('b', 8, new Rook(board, Color.BLACK));
+        placeNewPiece('a', 8, new King(board, Color.BLACK));
 	}
 }
