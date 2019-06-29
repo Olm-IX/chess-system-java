@@ -19,9 +19,13 @@ public abstract class ChessPiece extends Piece {
 		this.color = color;
 	}
 
-	// Encapsulamento
+	// Getters and Setters
 	public Color getColor() {
 		return color;
+	}
+	
+	public ChessPosition getChessPosition() {
+		return ChessPosition.fromPosition(position);
 	}
 	
 	// Métodos
