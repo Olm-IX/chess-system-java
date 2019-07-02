@@ -69,8 +69,7 @@ public class ChessMatch {
 		return board.piece(position).possibleMoves();
 	}
 
-	// Converte posição fornecida para posição de matriz, valida se posição e
-	// movimento são possíveis, e executa o movimento
+	// Converte posição fornecida para posição de matriz, valida se posição e movimento são possíveis, e executa o movimento
 	// Retorna a peça que estava na posição destino (ou nulo)
 	public ChessPiece performChessMove(ChessPosition sourcePosition, ChessPosition targetPosition) {
 		Position source = sourcePosition.toPosition();
@@ -94,12 +93,12 @@ public class ChessMatch {
 
 	// Executa o movimento no tabuleiro
 	private Piece makeMove(Position source, Position target) {
-		Piece p = board.removePiece(source);
+		ChessPiece p = (ChessPiece) board.removePiece(source);
+		p.increaseMoveCount();
 		Piece capturedPiece = board.removePiece(target);
 		board.placePiece(p, target);
 
-		// Se houver peça na posição destino, a mesma é retirada da lista
-		// piecesOnTheBoard, e acrescentada na lista capturedPieces
+		// Se houver peça na posição destino, a mesma é retirada da lista piecesOnTheBoard, e acrescentada na lista capturedPieces
 		if (capturedPiece != null) {
 			piecesOnTheBoard.remove(capturedPiece);
 			capturedPieces.add(capturedPiece);
@@ -109,7 +108,8 @@ public class ChessMatch {
 
 	// Desfaz o movimento (retira a peça do destino e a coloca de novo na origem, recoloco a peça capturada no destino, se houver)
 	private void undoMove(Position source, Position target, Piece capturedPiece) {
-		Piece p = board.removePiece(target);
+		ChessPiece p = (ChessPiece) board.removePiece(target);
+		p.decreaseMoveCount();
 		board.placePiece(p, source);
 		if (capturedPiece != null) {
 			board.placePiece(capturedPiece, target);
