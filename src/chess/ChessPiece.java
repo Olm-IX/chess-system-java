@@ -41,7 +41,7 @@ public abstract class ChessPiece extends Piece {
 	// Verifica se a a peça é da cor adversária (true)
 	protected boolean isThereOpponentPiece(Position position) {
 		ChessPiece p = (ChessPiece) getBoard().piece(position);
-		return p != null & p.getColor() != color;
+		return p != null && p.getColor() != color;
 	}
 	
 	public void increaseMoveCount() {

@@ -16,8 +16,7 @@ public final class Rook extends ChessPiece {
 		return "R";
 	}
 
-	// Cria matriz booleana com valor "true" nas posições em que é possível o
-	// movimento da peça
+	// Cria matriz booleana com valor "true" nas posições em que é possível o movimento da peça
 	@Override
 	public boolean[][] possibleMoves() {
 		boolean[][] mat = new boolean[getBoard().getRows()][getBoard().getColumns()];
