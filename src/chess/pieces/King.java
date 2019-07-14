@@ -16,12 +16,6 @@ public final class King extends ChessPiece {
 		return "K";
 	}
 
-	// Verifica se é possível mover o rei para a posição indicada
-	private boolean canMove(Position position) {
-		ChessPiece p = (ChessPiece) getBoard().piece(position);
-		return p == null || p.getColor() != getColor();
-	}
-
 	// Cria matriz booleana com valor "true" nas posições em que é possível o movimento da peça
 	@Override
 	public boolean[][] possibleMoves() {
@@ -37,7 +31,7 @@ public final class King extends ChessPiece {
 
 				p.setValues(position.getRow() + i, position.getColumn() + j);
 
-				if (getBoard().positionExists(p) && canMove(p)) {
+				 if (getBoard().positionExists(p) && (!getBoard().thereIsAPiece(p) || isThereOpponentPiece(p))) {
 					mat[p.getRow()][p.getColumn()] = true;
 				}
 			}
